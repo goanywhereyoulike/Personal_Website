@@ -198,9 +198,11 @@ export default function CapabilityGallery({ items, ariaLabel }: CapabilityGaller
               alt={item.alt}
               width="1672"
               height="941"
-              loading="lazy"
+              loading="eager"
               decoding="async"
+              fetchPriority="high"
               draggable="false"
+              onLoad={event => event.currentTarget.closest('.capability-panel')?.classList.add('is-image-loaded')}
             />
             <span className="capability-panel-shade" aria-hidden="true" />
             <div className="capability-panel-top"><span>0{index + 1}</span><span>{expanded ? '—' : '+'}</span></div>

@@ -72,6 +72,20 @@ Publish directory:
 dist
 ```
 
+### Render
+
+The repository includes `render.yaml` with the production build, SPA fallback, and cache rules for the current Render URL. When the service is managed as a Render Blueprint, syncing the Blueprint applies these settings automatically.
+
+For an existing Dashboard-created Static Site, add the same image cache rule under **Settings → Headers** if the service is not connected to the Blueprint:
+
+```text
+Path: /assets/capabilities/*
+Name: Cache-Control
+Value: public, max-age=86400, s-maxage=31536000, stale-while-revalidate=604800
+```
+
+Repeat the same header rule for `/resume/*` so both résumé files are served from Render's edge cache as well.
+
 ## Content and usage
 
 The portfolio source is published for review. Project artwork, written content, and résumé files remain the property of Zhen Fang and are not licensed for reuse.

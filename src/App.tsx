@@ -34,16 +34,16 @@ const HOME_META = {
 } as const
 const CAPABILITIES = {
   en: [
-    { title: 'Programming', body: 'C++, C#', image: '/assets/capabilities/skill-programming-v2.jpg', alt: 'Minimal abstract programming pipeline' },
-    { title: 'Tools', body: 'Git, Maya, Photoshop, ComfyUI', image: '/assets/capabilities/skill-tools-v2.jpg', alt: 'Minimal abstract technical art toolchain' },
-    { title: 'Graphics & Engines', body: 'Unity, Unreal Engine, HLSL, Shader Graph, VFX Graph, Niagara', image: '/assets/capabilities/skill-graphics-v2.jpg', alt: 'Minimal abstract real-time graphics surface' },
-    { title: 'Languages', body: 'Mandarin (Native), English (Fluent)', image: '/assets/capabilities/skill-languages-v2.jpg', alt: 'Minimal abstract communication waveforms' },
+    { title: 'Programming', body: 'C++, C#', image: '/assets/capabilities/skill-programming-v2.webp', alt: 'Minimal abstract programming pipeline' },
+    { title: 'Tools', body: 'Git, Maya, Photoshop, ComfyUI', image: '/assets/capabilities/skill-tools-v2.webp', alt: 'Minimal abstract technical art toolchain' },
+    { title: 'Graphics & Engines', body: 'Unity, Unreal Engine, HLSL, Shader Graph, VFX Graph, Niagara', image: '/assets/capabilities/skill-graphics-v2.webp', alt: 'Minimal abstract real-time graphics surface' },
+    { title: 'Languages', body: 'Mandarin (Native), English (Fluent)', image: '/assets/capabilities/skill-languages-v2.webp', alt: 'Minimal abstract communication waveforms' },
   ],
   'zh-CN': [
-    { title: '编程开发', body: 'C++、C#', image: '/assets/capabilities/skill-programming-v2.jpg', alt: '极简抽象的程序开发流程示意图' },
-    { title: '工具软件', body: 'Git、Maya、Photoshop、ComfyUI', image: '/assets/capabilities/skill-tools-v2.jpg', alt: '极简抽象的技术美术工具链示意图' },
-    { title: '图形与引擎', body: 'Unity、Unreal Engine、HLSL、Shader Graph、VFX Graph、Niagara', image: '/assets/capabilities/skill-graphics-v2.jpg', alt: '极简抽象的实时图形曲面示意图' },
-    { title: '语言能力', body: '普通话（母语）、英语（流利）', image: '/assets/capabilities/skill-languages-v2.jpg', alt: '极简抽象的双语沟通波形示意图' },
+    { title: '编程开发', body: 'C++、C#', image: '/assets/capabilities/skill-programming-v2.webp', alt: '极简抽象的程序开发流程示意图' },
+    { title: '工具软件', body: 'Git、Maya、Photoshop、ComfyUI', image: '/assets/capabilities/skill-tools-v2.webp', alt: '极简抽象的技术美术工具链示意图' },
+    { title: '图形与引擎', body: 'Unity、Unreal Engine、HLSL、Shader Graph、VFX Graph、Niagara', image: '/assets/capabilities/skill-graphics-v2.webp', alt: '极简抽象的实时图形曲面示意图' },
+    { title: '语言能力', body: '普通话（母语）、英语（流利）', image: '/assets/capabilities/skill-languages-v2.webp', alt: '极简抽象的双语沟通波形示意图' },
   ],
 } as const
 

@@ -1,0 +1,36 @@
+services:
+  - type: web
+    runtime: static
+    name: goanywhereyoulike
+    buildCommand: corepack enable && pnpm install --frozen-lockfile && SITE_URL=https://goanywhereyoulike.onrender.com pnpm build
+    staticPublishPath: ./dist
+    autoDeployTrigger: commit
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    headers:
+      - path: /assets/*.js
+        name: Cache-Control
+        value: public, max-age=31536000, immutable
+      - path: /assets/*.css
+        name: Cache-Control
+        value: public, max-age=31536000, immutable
+      - path: /assets/capabilities/*
+        name: Cache-Control
+        value: public, max-age=86400, s-maxage=31536000, stale-while-revalidate=604800
+      - path: /assets/project-*
+        name: Cache-Control
+        value: public, max-age=86400, s-maxage=31536000, stale-while-revalidate=604800
+      - path: /resume/*
+        name: Cache-Control
+        value: public, max-age=86400, s-maxage=31536000, stale-while-revalidate=604800
+      - path: /*
+        name: X-Frame-Options
+        value: DENY
+      - path: /*
+        name: Referrer-Policy
+        value: strict-origin-when-cross-origin
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
