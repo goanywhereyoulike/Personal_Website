@@ -1,0 +1,41 @@
+# Dependencies and generated builds
+node_modules/
+dist/
+.pnpm-store/
+coverage/
+*.tsbuildinfo
+
+# Local test and render output
+output/
+tmp/
+*.log
+
+# Environment and local configuration
+.env
+.env.*
+!.env.example
+*.local
+
+# Editor and operating-system files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Local source archive. Runtime-ready copies live in public/assets.
+source-assets/
+
+# Original files duplicated by optimized runtime assets or public resumes
+/ChatGPT Image *.png
+/4176e3ab-3411-4f42-8376-3b30882344ea.png
+/d57ec8a4-d3bc-4d91-8c00-9538c03b2c24.png
+/f36d53b5-bca0-4957-93a3-506ff1156036.png
+/方震简历.pdf
+/Zhen FANG-CV 3.0.doc
+
+# Local design references and agent instructions
+/water.txt
+/AGENTS.md
+/.agents/
+/.codex/
