@@ -1,0 +1,17 @@
+{
+  "name": "Zhen Fang — Technical Artist",
+  "short_name": "Zhen Fang",
+  "description": "Technical artist portfolio focused on real-time rendering, VFX, simulation, engine development, and production tools.",
+  "start_url": "/en",
+  "display": "standalone",
+  "background_color": "#10100f",
+  "theme_color": "#10100f",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

@@ -36,6 +36,13 @@ pnpm preview
 
 The production output is generated in `dist/`.
 
+For a public deployment, provide the final origin so the build can generate canonical URLs, language alternates, and `sitemap.xml`:
+
+```powershell
+$env:SITE_URL='https://your-domain.com'
+pnpm build
+```
+
 ## Project structure
 
 ```text
@@ -50,6 +57,8 @@ Uncompressed source artwork is intentionally kept outside version control. Only 
 ## Deployment notes
 
 This project is a single-page application. A static host must serve `index.html` as the fallback for application routes such as `/en/projects/storm-engine` and `/zh-CN/projects/niagara-sph-fluid`.
+
+The build also writes static HTML entry documents for every supported language and project route. Hosts that support the included `_headers` file will apply the recommended security and cache headers automatically; other CDN providers should mirror those values in their control panel.
 
 Build command:
 

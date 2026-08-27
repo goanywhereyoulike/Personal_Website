@@ -20,6 +20,18 @@ const SOCIAL_LINKS = [
   { id: 'linkedin', label: 'LinkedIn', href: 'https://www.linkedin.com/in/zhen-fang/', mark: 'in' },
 ] as const
 const EXPERIENCE_ORDER = [4, 3, 1, 2, 0]
+const HOME_META = {
+  en: {
+    title: 'Zhen Fang — Technical Artist',
+    description: 'Technical artist portfolio focused on real-time rendering, VFX, simulation, engine development, and production tools.',
+    imageAlt: 'Zhen Fang — Technical Artist portfolio preview',
+  },
+  'zh-CN': {
+    title: '方震 — 技术美术作品集',
+    description: '方震的技术美术作品集，聚焦实时渲染、视觉特效、模拟、引擎开发与制作工具。',
+    imageAlt: '方震技术美术作品集分享预览',
+  },
+} as const
 const CAPABILITIES = {
   en: [
     { title: 'Programming', body: 'C++, C#', image: '/assets/capabilities/skill-programming-v2.jpg', alt: 'Minimal abstract programming pipeline' },
@@ -45,6 +57,28 @@ function initialLocale(): Locale {
 
 function projectFromPath() {
   return window.location.pathname.match(/\/projects\/([^/]+)/)?.[1] ?? null
+}
+
+function setMeta(attribute: 'name' | 'property', key: string, contentValue: string) {
+  let element = document.head.querySelector<HTMLMetaElement>(`meta[${attribute}="${key}"]`)
+  if (!element) {
+    element = document.createElement('meta')
+    element.setAttribute(attribute, key)
+    document.head.appendChild(element)
+  }
+  element.content = contentValue
+}
+
+function setLink(rel: string, href: string, hreflang?: string) {
+  const selector = hreflang ? `link[rel="${rel}"][hreflang="${hreflang}"]` : `link[rel="${rel}"]:not([hreflang])`
+  let element = document.head.querySelector<HTMLLinkElement>(selector)
+  if (!element) {
+    element = document.createElement('link')
+    element.rel = rel
+    if (hreflang) element.hreflang = hreflang
+    document.head.appendChild(element)
+  }
+  element.href = href
 }
 
 function Arrow() {
@@ -93,6 +127,7 @@ export default function App() {
   const [activeSection, setActiveSection] = useState('')
   const [waveActive, setWaveActive] = useState(false)
   const t = content[locale]
+  const selectedProject = t.projects.find(item => item.slug === selectedSlug)
 
   useLayoutEffect(() => {
     document.documentElement.lang = locale
@@ -493,8 +528,42 @@ export default function App() {
 
   useEffect(() => {
     if (window.location.pathname === '/') window.history.replaceState({}, '', `/${locale}${window.location.hash}`)
-    document.title = locale === 'en' ? 'Zhen Fang — Technical Artist' : '方震 — 技术美术作品集'
-  }, [locale])
+
+    const homeMeta = HOME_META[locale]
+    const title = selectedProject ? `${selectedProject.title} — ${locale === 'en' ? 'Zhen Fang' : '方震'}` : homeMeta.title
+    const description = selectedProject?.summary ?? homeMeta.description
+    const routeSuffix = selectedProject ? `/projects/${selectedProject.slug}` : ''
+    const routePath = `/${locale}${routeSuffix}`
+    const alternateLocale: Locale = locale === 'en' ? 'zh-CN' : 'en'
+    const alternatePath = `/${alternateLocale}${routeSuffix}`
+    const origin = window.location.origin
+    const canonicalUrl = `${origin}${routePath}`
+    const imagePath = selectedProject?.image ?? '/og.png'
+    const imageUrl = new URL(imagePath, origin).href
+    const imageAlt = selectedProject?.alt ?? homeMeta.imageAlt
+
+    document.title = title
+    setMeta('name', 'description', description)
+    setMeta('name', 'robots', 'index, follow, max-image-preview:large')
+    setMeta('property', 'og:type', 'website')
+    setMeta('property', 'og:site_name', 'Zhen Fang — Technical Artist')
+    setMeta('property', 'og:locale', locale === 'en' ? 'en_US' : 'zh_CN')
+    setMeta('property', 'og:locale:alternate', locale === 'en' ? 'zh_CN' : 'en_US')
+    setMeta('property', 'og:title', title)
+    setMeta('property', 'og:description', description)
+    setMeta('property', 'og:url', canonicalUrl)
+    setMeta('property', 'og:image', imageUrl)
+    setMeta('property', 'og:image:alt', imageAlt)
+    setMeta('name', 'twitter:card', 'summary_large_image')
+    setMeta('name', 'twitter:title', title)
+    setMeta('name', 'twitter:description', description)
+    setMeta('name', 'twitter:image', imageUrl)
+    setMeta('name', 'twitter:image:alt', imageAlt)
+    setLink('canonical', canonicalUrl)
+    setLink('alternate', `${origin}${routePath}`, locale)
+    setLink('alternate', `${origin}${alternatePath}`, alternateLocale)
+    setLink('alternate', `${origin}/en${routeSuffix}`, 'x-default')
+  }, [locale, selectedProject])
 
   useEffect(() => {
     let frame = 0
@@ -608,7 +677,6 @@ export default function App() {
     window.setTimeout(() => setCopied(false), 1800)
   }
 
-  const selectedProject = t.projects.find(item => item.slug === selectedSlug)
   const orderedExperience = EXPERIENCE_ORDER.map(index => ({ item: t.experience[index], sourceIndex: index }))
   const navItems = [
     { id: 'experience', label: locale === 'en' ? 'Experience' : '经历' },
@@ -792,7 +860,7 @@ export default function App() {
                 {locale !== 'en' && (
                   <a href="/resume/Fang-Zhen-CV-CN.pdf" target="_blank" rel="noreferrer">{t.contact.resumeZh} <Arrow /></a>
                 )}
-                <a href="/resume/Zhen-Fang-CV.doc" target="_blank" rel="noreferrer">{t.contact.resumeEn} <Arrow /></a>
+                <a href="/resume/Zhen-Fang-CV.pdf" target="_blank" rel="noreferrer">{t.contact.resumeEn} <Arrow /></a>
               </div>
               <nav className="social-links" aria-label={locale === 'en' ? 'Social profiles' : '社交主页'}>
                 {SOCIAL_LINKS.map(link => (
