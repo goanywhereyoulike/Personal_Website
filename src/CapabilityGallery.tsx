@@ -19,6 +19,7 @@ type CapabilityGalleryProps = {
 
 export default function CapabilityGallery({ items, ariaLabel }: CapabilityGalleryProps) {
   const [active, setActive] = useState(Math.min(1, items.length - 1))
+  const [loadedImages, setLoadedImages] = useState<ReadonlySet<string>>(() => new Set())
   const rootRef = useRef<HTMLDivElement | null>(null)
   const panelRefs = useRef<Array<HTMLElement | null>>([])
   const mediaRefs = useRef<Array<HTMLImageElement | null>>([])
@@ -160,6 +161,30 @@ export default function CapabilityGallery({ items, ariaLabel }: CapabilityGaller
     if (active > items.length - 1) setActive(Math.max(0, items.length - 1))
   }, [active, items.length])
 
+  useEffect(() => {
+    const cachedImages = items.filter((item, index) => {
+      const image = mediaRefs.current[index]
+      return Boolean(image?.complete && image.naturalWidth > 0)
+    })
+
+    if (!cachedImages.length) return
+    setLoadedImages(previous => {
+      if (cachedImages.every(item => previous.has(item.image))) return previous
+      const next = new Set(previous)
+      cachedImages.forEach(item => next.add(item.image))
+      return next
+    })
+  }, [items])
+
+  const markImageLoaded = (image: string) => {
+    setLoadedImages(previous => {
+      if (previous.has(image)) return previous
+      const next = new Set(previous)
+      next.add(image)
+      return next
+    })
+  }
+
   const handleKeyDown = (index: number, event: React.KeyboardEvent<HTMLElement>) => {
     if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
       event.preventDefault()
@@ -181,7 +206,7 @@ export default function CapabilityGallery({ items, ariaLabel }: CapabilityGaller
         const expanded = index === active
         return (
           <article
-            className={`capability-panel${expanded ? ' is-active' : ''}`}
+            className={`capability-panel${expanded ? ' is-active' : ''}${loadedImages.has(item.image) ? ' is-image-loaded' : ''}`}
             key={item.title}
             role="listitem"
             tabIndex={0}
@@ -202,7 +227,7 @@ export default function CapabilityGallery({ items, ariaLabel }: CapabilityGaller
               decoding="async"
               fetchPriority="high"
               draggable="false"
-              onLoad={event => event.currentTarget.closest('.capability-panel')?.classList.add('is-image-loaded')}
+              onLoad={() => markImageLoaded(item.image)}
             />
             <span className="capability-panel-shade" aria-hidden="true" />
             <div className="capability-panel-top"><span>0{index + 1}</span><span>{expanded ? '—' : '+'}</span></div>
