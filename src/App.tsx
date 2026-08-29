@@ -10,6 +10,7 @@ gsap.registerPlugin(ScrollTrigger)
 ScrollTrigger.config({ limitCallbacks: true, ignoreMobileResize: true })
 
 const EMAIL = 'zhen.fang1993@hotmail.com'
+const LOCALE_STORAGE_KEY = 'zf-locale'
 const emailHref = (locale: Locale) => {
   const subject = locale === 'en' ? 'Technical art opportunity — Zhen Fang' : '技术美术岗位与项目沟通 — 方震'
   return `mailto:${EMAIL}?subject=${encodeURIComponent(subject)}`
@@ -47,12 +48,27 @@ const CAPABILITIES = {
   ],
 } as const
 
+function localeFromPath(pathname = window.location.pathname): Locale | null {
+  const pathLocale = pathname.split('/')[1]
+  return pathLocale === 'en' || pathLocale === 'zh-CN' ? pathLocale : null
+}
+
+function savedLocale(): Locale | null {
+  try {
+    const saved = window.localStorage.getItem(LOCALE_STORAGE_KEY)
+    return saved === 'en' || saved === 'zh-CN' ? saved : null
+  } catch {
+    return null
+  }
+}
+
+function systemLocale(): Locale {
+  const language = navigator.languages?.[0] || navigator.language || ''
+  return /^zh(?:-|$)/i.test(language) ? 'zh-CN' : 'en'
+}
+
 function initialLocale(): Locale {
-  const pathLocale = window.location.pathname.split('/')[1]
-  if (pathLocale === 'en' || pathLocale === 'zh-CN') return pathLocale
-  const saved = window.localStorage.getItem('zf-locale')
-  if (saved === 'en' || saved === 'zh-CN') return saved
-  return navigator.language.toLowerCase().startsWith('zh') ? 'zh-CN' : 'en'
+  return localeFromPath() ?? savedLocale() ?? systemLocale()
 }
 
 function projectFromPath() {
@@ -131,6 +147,15 @@ export default function App() {
 
   useLayoutEffect(() => {
     document.documentElement.lang = locale
+
+    if (!localeFromPath()) {
+      const pathSuffix = window.location.pathname === '/' ? '' : window.location.pathname
+      window.history.replaceState(
+        {},
+        '',
+        `/${locale}${pathSuffix}${window.location.search}${window.location.hash}`,
+      )
+    }
   }, [locale])
 
   useLayoutEffect(() => {
@@ -527,8 +552,6 @@ export default function App() {
   }, [selectedSlug, locale])
 
   useEffect(() => {
-    if (window.location.pathname === '/') window.history.replaceState({}, '', `/${locale}${window.location.hash}`)
-
     const homeMeta = HOME_META[locale]
     const title = selectedProject ? `${selectedProject.title} — ${locale === 'en' ? 'Zhen Fang' : '方震'}` : homeMeta.title
     const description = selectedProject?.summary ?? homeMeta.description
@@ -656,8 +679,12 @@ export default function App() {
   const switchLocale = () => {
     const next: Locale = locale === 'en' ? 'zh-CN' : 'en'
     const suffix = window.location.pathname.replace(/^\/(en|zh-CN)/, '')
-    window.localStorage.setItem('zf-locale', next)
-    window.history.replaceState({}, '', `/${next}${suffix}${window.location.hash}`)
+    try {
+      window.localStorage.setItem(LOCALE_STORAGE_KEY, next)
+    } catch {
+      // The route still switches when storage is unavailable or disabled.
+    }
+    window.history.replaceState({}, '', `/${next}${suffix}${window.location.search}${window.location.hash}`)
     setLocale(next)
   }
 
