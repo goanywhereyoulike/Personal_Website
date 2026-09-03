@@ -905,6 +905,15 @@ export default function App() {
                 ))}
               </nav>
             </div>
+            <nav className="filing-links" aria-label={locale === 'en' ? 'Website registrations' : '网站备案信息'}>
+              <a href="https://beian.miit.gov.cn/" target="_blank" rel="noreferrer">
+                鄂ICP备2026047109号-1
+              </a>
+              <a href="https://beian.mps.gov.cn/#/query/webSearch?code=42018502009357" target="_blank" rel="noreferrer">
+                <img src="/assets/beian-police.png" alt="" width="16" height="16" decoding="async" />
+                <span>鄂公网安备42018502009357号</span>
+              </a>
+            </nav>
             <div className="footer-base"><span>© 2026 ZHEN FANG</span><span>{locale === 'en' ? 'TECHNICAL ARTIST · WUHAN' : '技术美术 · 武汉'}</span><a href="#top">{t.contact.back} ↑</a></div>
           </div>
         </footer>
